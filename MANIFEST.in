@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include curdle *.css
+recursive-include curdle *.csv
+recursive-include curdle *.html
+recursive-include curdle *.ico
+recursive-include curdle *.js
+recursive-include curdle *.json
+recursive-include curdle *.md
+recursive-include curdle *.png
+recursive-include curdle *.py
+recursive-include curdle *.svg
+recursive-include curdle *.txt
+recursive-exclude curdle *.pyc
