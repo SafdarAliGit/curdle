@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         function reverseString(str) {
             const numericData = str.match(/-?\d+(\.\d+)?/);
-            return numericData
+            return numericData[0].replace(/^0\./, '');
         }
 
         // Function to connect to the serial port
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
                     // Process the received data
                     let reversedValue = reverseString(value);
-                    let floatValue = parseFloat(reversedValue);
+                    let floatValue = parseInt(reversedValue);
 
                     // Check if floatValue is a valid number
                     if (!isNaN(floatValue)) {
