@@ -262,7 +262,7 @@ function addItemToChildTable(frm, itemCode, itemRate) {
         var qty = isFlavourYogurt(itemCode) ? ($('#qty').val() || 1) : ($('#quantity').val() || 1);
         if (existingItem) {
             // Item already exists, increment the quantity by 1
-            existingItem.qty = (parseFloat(qty) || 0);
+            existingItem.qty = (parseInt(qty) || 0);
             existingItem.amount = (existingItem.rate || 0) * existingItem.qty; // Recalculate the amount
             frm.refresh_field(child_table_field); // Refresh the child table to show the updated row
         } else {
