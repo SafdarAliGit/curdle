@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         function reverseString(str) {
             const numericData = str.match(/-?\d+(\.\d+)?/);
-            return numericData[0].split('').reverse().join('');
+            return numericData
         }
 
         // Function to connect to the serial port
