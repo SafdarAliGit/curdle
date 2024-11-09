@@ -1,4 +1,3 @@
-
 const TaxRate = {
     tax_rate: 0
 };
