@@ -7,7 +7,8 @@ $(document).ready(function () {
         const throttleDelay = 3000; // Throttle delay in milliseconds
 
         function reverseString(str) {
-            return str.split('').reverse().join('');
+            const numericData = data.match(/-?\d+(\.\d+)?/);
+            return numericData[0].split('').reverse().join('');
         }
 
         // Function to connect to the serial port
