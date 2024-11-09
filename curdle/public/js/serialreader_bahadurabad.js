@@ -39,7 +39,7 @@ $(document).ready(function () {
                     }
 
                     // Process the received data
-                    let reversedValue = reverseString(value.trim());
+                    let reversedValue = reverseString(value);
                     let floatValue = parseFloat(reversedValue);
 
                     // Check if floatValue is a valid number
