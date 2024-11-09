@@ -1,0 +1,279 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2024-08-19 16:36:20.226185",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "items",
+  "column_break_tli7z",
+  "section_break_adk2h",
+  "net_total",
+  "column_break_rsd5k",
+  "tax",
+  "column_break_soshd",
+  "grand_total",
+  "column_break_kuvxt",
+  "paid_amount",
+  "column_break_ikd1v",
+  "to_be_paid",
+  "naming_series",
+  "posting_date",
+  "posting_time",
+  "mop",
+  "pos_profile",
+  "ref_no",
+  "section_break_hecvi",
+  "machine_date",
+  "column_break_3wai0",
+  "machine_time",
+  "column_break_s4l00",
+  "machine_tid",
+  "column_break_twiah",
+  "machine_mid",
+  "column_break_exx04",
+  "machine_card_no",
+  "column_break_s3cnk",
+  "machine_invoice_no",
+  "pos_ivoice_series",
+  "machine_returned_data",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "Walking Customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bahadurabad Branch",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Invoice Item",
+   "options": "Bahadurabad Branch Item"
+  },
+  {
+   "fieldname": "column_break_tli7z",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_adk2h",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kuvxt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "label": "Paid Amount"
+  },
+  {
+   "fieldname": "column_break_ikd1v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "to_be_paid",
+   "fieldtype": "Currency",
+   "label": "Change Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "options": "TSB-.YYYY.-"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "Posting Time"
+  },
+  {
+   "fieldname": "mop",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "MOP"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bahadurabad Branch",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "net_total",
+   "fieldtype": "Currency",
+   "label": "Net Total"
+  },
+  {
+   "fieldname": "column_break_rsd5k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "tax",
+   "fieldtype": "Currency",
+   "label": "Tax"
+  },
+  {
+   "fieldname": "column_break_soshd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pos_profile",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "POS Profile"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "ref_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Ref No"
+  },
+  {
+   "fieldname": "machine_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Machine Date"
+  },
+  {
+   "fieldname": "machine_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "Machine Time"
+  },
+  {
+   "fieldname": "machine_tid",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Machine TID"
+  },
+  {
+   "fieldname": "machine_mid",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Machine MID"
+  },
+  {
+   "fieldname": "machine_card_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Machine Card No"
+  },
+  {
+   "fieldname": "machine_invoice_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Machine Invoice No"
+  },
+  {
+   "fieldname": "section_break_hecvi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_3wai0",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_s4l00",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_twiah",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_exx04",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_s3cnk",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "default": "TS-INV-.DD.-.MM.-.YY.-",
+   "fieldname": "pos_ivoice_series",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "POS Ivoice Series"
+  },
+  {
+   "fieldname": "machine_returned_data",
+   "fieldtype": "Small Text",
+   "label": "Machine Returned Data"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-10-02 17:09:40.183660",
+ "modified_by": "Administrator",
+ "module": "curdle",
+ "name": "Bahadurabad Branch",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_preview_popup": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

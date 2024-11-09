@@ -215,3 +215,6 @@ app_license = "MIT"
 # auth_hooks = [
 #	"curdle.auth.validate"
 # ]
+doctype_js = {"Bahadurabad Branch": "public/js/serialreader_bahadurabad.js"}
+
+required_apps = ["erpnext"]
