@@ -7,7 +7,7 @@ $(document).ready(function () {
         const throttleDelay = 3000; // Throttle delay in milliseconds
 
         function reverseString(str) {
-            const numericData = data.match(/-?\d+(\.\d+)?/);
+            const numericData = str.match(/-?\d+(\.\d+)?/);
             return numericData[0].split('').reverse().join('');
         }
 
