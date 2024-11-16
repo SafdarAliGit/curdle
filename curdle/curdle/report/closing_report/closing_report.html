@@ -1,0 +1,37 @@
+<style>
+  .report-container {
+    max-width: 80mm;
+    padding: 10px;
+    margin: auto;
+  }
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .report-table td {
+    padding: 4px;
+    border: none;
+  }
+</style>
+
+<div class="report-container">
+
+<!--  <div style="margin-bottom: 7px;">-->
+<!--	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}-->
+<!--</div>-->
+<h2 class="text-center">{%= __("Closing Report") %}</h2>
+<h4 class="text-center">Date:{%= filters.date || "" %} </h4>
+  <h4 class="text-center">Branch:{%= filters.pos_profile || "" %} </h4>
+
+<hr>
+
+  <table class="report-table">
+    <tbody>
+      {% for row in data %}
+      <tr>
+        <td style="font-size: 1.2em;">{{ row.pos_opening_entry }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
