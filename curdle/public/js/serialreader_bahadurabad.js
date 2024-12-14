@@ -40,7 +40,7 @@ $(document).ready(function () {
 
                     // Process the received data
                     let reversedValue = reverseString(value);
-                    let floatValue = parseFloat(reversedValue);
+                    let floatValue = parseFloat(reversedValue) * 1000;
 
                     // Check if floatValue is a valid number
                     if (!isNaN(floatValue)) {
