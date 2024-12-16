@@ -8,7 +8,29 @@ $(document).ready(function () {
 
         function reverseString(str) {
             const numericData = str.match(/-?\d+(\.\d+)?/);
-            return numericData[0].replace(/^0\./, '');
+
+            if (!numericData) {
+                throw new Error("No numeric data found in the string.");
+            }
+
+            let number = numericData[0]; // Extract the number as a string.
+
+            if (number.includes('.')) {
+                // Split the number into integer and decimal parts.
+                const [integerPart, decimalPart] = number.split('.');
+
+                // Reverse both the integer part and the decimal part
+                const reversedInteger = integerPart.split('').join('');
+                const reversedDecimal = decimalPart.split('').join('');
+
+                // Combine the reversed decimal and integer parts
+                const resultString = `${reversedDecimal}.${reversedInteger}`;
+
+                // Return the result multiplied by 1000
+                return parseFloat(resultString);
+            }
+
+            throw new Error("The numeric data does not contain a decimal.");
         }
 
         // Function to connect to the serial port
@@ -39,8 +61,7 @@ $(document).ready(function () {
                     }
 
                     // Process the received data
-                    let reversedValue = reverseString(value);
-                    let floatValue = parseInt(reversedValue);
+                    let floatValue = reverseString(value);
 
                     // Check if floatValue is a valid number
                     if (!isNaN(floatValue)) {
@@ -63,7 +84,7 @@ $(document).ready(function () {
                             }
                         }
                     } else {
-                        console.error('Received data is not a valid number:', reversedValue);
+                        console.error('Received data is not a valid number:', floatValue);
                     }
                 } catch (error) {
                     console.error('Error reading serial data:', error);
