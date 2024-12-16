@@ -7,8 +7,16 @@ $(document).ready(function () {
         const throttleDelay = 3000; // Throttle delay in milliseconds
 
         function reverseString(str) {
-            const numericData = str.match(/-?\d+(\.\d+)?/);
-            return numericData[0].replace(/^0\./, '');
+            const numericData = str.match(/(\d+\.\d+)/);
+
+            if (!numericData) {
+                throw new Error("No valid numeric data with a decimal point found in the string.");
+            }
+
+            let number = numericData[0]; // Get the numeric part as a string
+
+            // Convert the string number to a float and multiply by 1000
+            return parseFloat(number) * 1000;
         }
 
         // Function to connect to the serial port
@@ -39,8 +47,8 @@ $(document).ready(function () {
                     }
 
                     // Process the received data
-                    let reversedValue = reverseString(value);
-                    let floatValue = parseInt(reversedValue);
+                    let floatValue = reverseString(value);
+                    // let floatValue = parseInt(reversedValue);
 
                     // Check if floatValue is a valid number
                     if (!isNaN(floatValue)) {
@@ -63,7 +71,7 @@ $(document).ready(function () {
                             }
                         }
                     } else {
-                        console.error('Received data is not a valid number:', reversedValue);
+                        console.error('Received data is not a valid number:', floatValue);
                     }
                 } catch (error) {
                     console.error('Error reading serial data:', error);
