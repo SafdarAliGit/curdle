@@ -228,7 +228,7 @@ function get_tax_rate(frm, mode_of_payment, pos_profile) {
             var net_total = flt(frm.doc.net_total);
             TaxRate.tax_rate = response.message.tax_rate;
             var tax = flt(TaxRate.tax_rate / 100) * flt(net_total);
-
+            tax = parseFloat(tax.toFixed(2));
             if (mode_of_payment == 'Credit Card') {
                 frm.set_value('tax', tax);
                 frm.set_value('grand_total', tax + net_total);
