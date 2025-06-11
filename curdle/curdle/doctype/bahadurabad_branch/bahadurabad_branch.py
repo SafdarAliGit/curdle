@@ -1,6 +1,6 @@
 import frappe
 from frappe.model.document import Document
-from yofroyo.yofroyo.doctype.utils import get_doctype_by_field
+from curdle.curdle.doctype.utils import get_doctype_by_field
 from frappe.model.naming import make_autoname
 
 
