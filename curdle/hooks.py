@@ -125,12 +125,12 @@ app_license = "MIT"
 #		"on_trash": "method"
 #	}
 # }
-# doc_events = {
-# 	"POS Invoice": {
-# 		"after_insert": "curdle.overrides.srb_invoice.custom_after_insert",
+doc_events = {
+	"POS Invoice": {
+		"before_submit": "curdle.overrides.srb_invoice.custom_before_submit",
 		
-# 	}
-# }
+	}
+}
 # Scheduled Tasks
 # ---------------
 

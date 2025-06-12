@@ -3,13 +3,11 @@ import requests
 from frappe.utils import now
 import json
 
-def custom_after_insert(doc, method):
+def custom_before_submit(doc, method):
     tax_rate = frappe.get_value('POS Profile', doc.pos_profile, 'tax_on_cash')
     srb_invoice_id = get_srb_invoice_id(doc, tax_rate)  
     doc.custom_srb_invoice_id = srb_invoice_id   
-    doc.save()
-
-
+    
 
 def get_srb_invoice_id(doc, tax_rate):
     url = "http://apps.srb.gos.pk/PoSService/CloudSalesInvoiceService"
