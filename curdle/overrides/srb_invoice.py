@@ -10,7 +10,7 @@ def custom_before_submit(doc, method):
     
 
 def get_srb_invoice_id(doc, tax_rate):
-    url = "http://POS.srb.gos.pk/PoSService/CloudSalesInvoiceService"
+    url = "https://POS.srb.gos.pk/PoSService/CloudSalesInvoiceService"
 
     payload = {
         "posId": 1974,
