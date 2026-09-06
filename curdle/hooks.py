@@ -7,6 +7,12 @@ app_description = "Curdle"
 app_email = "safdar211@gmail.com"
 app_license = "MIT"
 
+jinja = {
+    "methods": [
+        'curdle.overrides.qrcode.get_qr_code'
+    ]
+}
+
 # Includes in <head>
 # ------------------
 
@@ -128,7 +134,6 @@ app_license = "MIT"
 doc_events = {
 	"POS Invoice": {
 		"before_submit": "curdle.overrides.srb_invoice.custom_before_submit",
-		
 	}
 }
 # Scheduled Tasks
@@ -220,6 +225,9 @@ doc_events = {
 # auth_hooks = [
 #	"curdle.auth.validate"
 # ]
-doctype_js = {"Bahadurabad Branch": "public/js/serialreader_bahadurabad.js"}
+doctype_js = {
+	"Bahadurabad Branch": "public/js/serialreader_bahadurabad.js",
+	"Multan Branch": "public/js/serialreader_bahadurabad.js",
+}
 
 required_apps = ["erpnext"]

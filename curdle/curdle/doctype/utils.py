@@ -106,50 +106,54 @@ def get_doctype_by_field(doctype_name, field_name, field_value):
         return None
 
 
+def _get_pos_screen_data(pos_profile, item_group_filter):
+    """Shared by the get_for_* POS-screen endpoints: mode of payments plus
+    the items (with selling price) for the given POS profile / item group filter.
+    """
+    price_list = frappe.get_value('POS Profile', pos_profile, 'selling_price_list')
+    mode_of_payments = frappe.get_all(
+        'POS Payment Method',
+        fields=['mode_of_payment', 'default'],
+        filters={'parent': pos_profile},
+        ignore_permissions=True
+    )
+    items = frappe.get_list('Item', fields=['item_code', 'image'], filters={'item_group': item_group_filter})
+    if not items:
+        raise ValueError(frappe._('No items found for the given item group.'))
+
+    item_codes = [item['item_code'] for item in items]
+
+    query = """
+        SELECT item_code, price_list_rate
+        FROM `tabItem Price`
+        WHERE item_code IN ({})
+        AND price_list = %s
+        AND selling = 1
+    """.format(','.join(['%s'] * len(item_codes)))
+
+    prices = frappe.db.sql(query, tuple(item_codes) + (price_list,), as_dict=True)
+    item_prices = {price['item_code']: price['price_list_rate'] for price in prices}
+
+    merged_items = [
+        {
+            'item_code': item['item_code'],
+            'image': item['image'],
+            'rate': item_prices.get(item['item_code'], None)
+        }
+        for item in items
+    ]
+
+    return {
+        'items': merged_items,
+        'mode_of_payments': mode_of_payments,
+    }
+
+
 @frappe.whitelist()
 def get_for_invoice(**args):
     try:
-        price_list = frappe.get_value('POS Profile', args.get('pos_profile'), 'selling_price_list')
-        mode_of_payments = frappe.get_all(
-            'POS Payment Method',
-            fields=['mode_of_payment', 'default'],
-            filters={'parent': args.get('pos_profile')},
-            ignore_permissions=True
-        )
-        items = frappe.get_list('Item', fields=['item_code', 'image'], filters={'item_group': args.get('item_group')})
-        if not items:
-            raise ValueError(frappe._('No items found for the given item group.'))
-
-        item_codes = [item['item_code'] for item in items]
-        if not item_codes:
-            return []
-
-        query = """
-            SELECT item_code, price_list_rate
-            FROM `tabItem Price`
-            WHERE item_code IN ({})
-            AND price_list = %s
-            AND selling = 1
-        """.format(','.join(['%s'] * len(item_codes)))
-
-        prices = frappe.db.sql(query, tuple(item_codes) + (price_list,), as_dict=True)
-        item_prices = {price['item_code']: price['price_list_rate'] for price in prices}
-
-        merged_items = [
-            {
-                'item_code': item['item_code'],
-                'image': item['image'],
-                'rate': item_prices.get(item['item_code'], None)
-            }
-            for item in items
-        ]
-
-        return {
-            'items': merged_items,
-            'mode_of_payments': mode_of_payments,
-        }
-
-    except Exception as e:
+        return _get_pos_screen_data(args.get('pos_profile'), args.get('item_group'))
+    except Exception:
         frappe.log_error(frappe.get_traceback(), 'Error in get_for_invoice')
         raise
 
@@ -157,97 +161,27 @@ def get_for_invoice(**args):
 @frappe.whitelist()
 def get_for_bahadurabad_branch(**args):
     try:
-        price_list = frappe.get_value('POS Profile', args.get('pos_profile'), 'selling_price_list')
-        mode_of_payments = frappe.get_all(
-            'POS Payment Method',
-            fields=['mode_of_payment', 'default'],
-            filters={'parent': args.get('pos_profile')},
-            ignore_permissions=True
-        )
-        items = frappe.get_list('Item', fields=['item_code', 'image'],
-                                filters={'item_group': ['in', ['Finish', 'Kitchen']]})
-        if not items:
-            raise ValueError(frappe._('No items found for the given item group.'))
+        return _get_pos_screen_data(args.get('pos_profile'), ['in', ['Finish', 'Kitchen']])
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), 'Error in get_for_bahadurabad_branch')
+        raise
 
-        item_codes = [item['item_code'] for item in items]
-        if not item_codes:
-            return []
 
-        query = """
-            SELECT item_code, price_list_rate
-            FROM `tabItem Price`
-            WHERE item_code IN ({})
-            AND price_list = %s
-            AND selling = 1
-        """.format(','.join(['%s'] * len(item_codes)))
-
-        prices = frappe.db.sql(query, tuple(item_codes) + (price_list,), as_dict=True)
-        item_prices = {price['item_code']: price['price_list_rate'] for price in prices}
-
-        merged_items = [
-            {
-                'item_code': item['item_code'],
-                'image': item['image'],
-                'rate': item_prices.get(item['item_code'], None)
-            }
-            for item in items
-        ]
-
-        return {
-            'items': merged_items,
-            'mode_of_payments': mode_of_payments,
-        }
-
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), 'Error in get_for_invoice')
+@frappe.whitelist()
+def get_for_multan_branch(**args):
+    try:
+        return _get_pos_screen_data(args.get('pos_profile'), ['in', ['Finish', 'Kitchen']])
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), 'Error in get_for_multan_branch')
         raise
 
 
 @frappe.whitelist()
 def get_for_shahbaz_branch_dha(**args):
     try:
-        price_list = frappe.get_value('POS Profile', args.get('pos_profile'), 'selling_price_list')
-        mode_of_payments = frappe.get_all(
-            'POS Payment Method',
-            fields=['mode_of_payment', 'default'],
-            filters={'parent': args.get('pos_profile')},
-            ignore_permissions=True
-        )
-        items = frappe.get_list('Item', fields=['item_code', 'image'], filters={'item_group': args.get('item_group')})
-        if not items:
-            raise ValueError(frappe._('No items found for the given item group.'))
-
-        item_codes = [item['item_code'] for item in items]
-        if not item_codes:
-            return []
-
-        query = """
-            SELECT item_code, price_list_rate
-            FROM `tabItem Price`
-            WHERE item_code IN ({})
-            AND price_list = %s
-            AND selling = 1
-        """.format(','.join(['%s'] * len(item_codes)))
-
-        prices = frappe.db.sql(query, tuple(item_codes) + (price_list,), as_dict=True)
-        item_prices = {price['item_code']: price['price_list_rate'] for price in prices}
-
-        merged_items = [
-            {
-                'item_code': item['item_code'],
-                'image': item['image'],
-                'rate': item_prices.get(item['item_code'], None)
-            }
-            for item in items
-        ]
-
-        return {
-            'items': merged_items,
-            'mode_of_payments': mode_of_payments,
-        }
-
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), 'Error in get_for_invoice')
+        return _get_pos_screen_data(args.get('pos_profile'), args.get('item_group'))
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), 'Error in get_for_shahbaz_branch_dha')
         raise
 
 

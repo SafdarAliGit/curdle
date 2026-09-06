@@ -4,21 +4,19 @@ from curdle.curdle.doctype.utils import get_doctype_by_field
 from frappe.model.naming import make_autoname
 
 
-class BahadurabadBranch(Document):
+class MultanBranch(Document):
 
     def validate_items(self):
         if self.net_total is None or self.net_total < 1:
             frappe.throw("Net Total cannot be zero or less than 1 for Invoice.")
 
-    # def before_save(self):
-    #     self.posting_time = frappe.utils.now_datetime()
     def on_update(self):
         if self.docstatus == 0:
             self.submit()
 
     def on_submit(self):
         # Ensure the POS Profile exists
-        pos_profile = frappe.get_doc("POS Profile", "Bahadurabad Branch")
+        pos_profile = frappe.get_doc("POS Profile", "Multan Branch")
 
         # Create a new POS Invoice
         posi = frappe.new_doc("POS Invoice")
