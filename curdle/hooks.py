@@ -227,7 +227,7 @@ doc_events = {
 # ]
 doctype_js = {
 	"Bahadurabad Branch": "public/js/serialreader_bahadurabad.js",
-	"Multan Branch": "public/js/serialreader_bahadurabad.js",
+	"Multan Branch": "public/js/serialreader_multan.js",
 }
 
 required_apps = ["erpnext"]
