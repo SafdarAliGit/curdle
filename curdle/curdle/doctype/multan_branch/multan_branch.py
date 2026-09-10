@@ -45,9 +45,9 @@ class MultanBranch(Document):
         payment.mode_of_payment = self.mop
         payment.amount = float(self.grand_total)
         if self.mop == 'Cash':
-            posi.taxes_and_charges = 'GST on Cash - CM'
+            posi.taxes_and_charges = 'GST on Cash - C'
         elif self.mop == 'Credit Card':
-            posi.taxes_and_charges = 'GST on Credit Card - CM'
+            posi.taxes_and_charges = 'GST on Credit Card - C'
 
         try:
             posi.submit()
