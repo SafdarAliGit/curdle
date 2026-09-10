@@ -3,121 +3,108 @@ $(document).ready(function () {
         let port;
         let reader;
         let textDecoder;
-        let lastUpdate = 0;
-        const throttleDelay = 3000;
+        let lastUpdate = 0; // Timestamp of the last update
+        const throttleDelay = 3000; // Throttle delay in milliseconds
 
         function reverseString(str) {
             const numericData = str.match(/(\d+\.\d+)/);
+
             if (!numericData) {
                 throw new Error("No valid numeric data with a decimal point found in the string.");
             }
-            return parseFloat(numericData[0]) * 1000;
+
+            let number = numericData[0]; // Get the numeric part as a string
+
+            // Convert the string number to a float and multiply by 1000
+            return parseFloat(number) * 1000;
         }
 
-        // Reuses an already-open connection instead of re-requesting/re-opening
-        // the port on every click, which used to throw on an already-open port
-        // and leave the stream stuck until a hard page refresh.
+        // Function to connect to the serial port
         async function connectSerial() {
-            if (port && reader) {
-                return;
-            }
             try {
-                if (!port) {
-                    const grantedPorts = await navigator.serial.getPorts();
-                    port = grantedPorts.length ? grantedPorts[0] : await navigator.serial.requestPort();
-                }
-                if (!port.readable) {
-                    await port.open({baudRate: 9600});
-                }
+                port = await navigator.serial.requestPort();
+                await port.open({baudRate: 9600});
+                // Initialize text decoder
                 textDecoder = new TextDecoderStream();
-                port.readable.pipeTo(textDecoder.writable).catch(() => {});
+                const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
                 reader = textDecoder.readable.getReader();
+
+                // Start reading data
                 readSerialData();
             } catch (error) {
                 console.error('Error connecting to serial port:', error);
-                port = null;
-                reader = null;
             }
         }
 
-        // Forget a stale port on physical disconnect so the next click can reconnect cleanly.
-        navigator.serial.addEventListener('disconnect', (event) => {
-            if (event.target === port) {
-                port = null;
-                reader = null;
-            }
-        });
-
+        // Function to read data from the serial port with throttling
         async function readSerialData() {
             while (true) {
                 try {
                     const {value, done} = await reader.read();
                     if (done) {
                         reader.releaseLock();
-                        port = null;
-                        reader = null;
                         break;
                     }
 
-                    // A single garbled/partial chunk must not kill the loop,
-                    // otherwise every weighed object after it needs a refresh.
-                    try {
-                        const floatValue = reverseString(value);
-                        if (!isNaN(floatValue)) {
-                            const currentTime = Date.now();
-                            if (currentTime - lastUpdate >= throttleDelay) {
-                                lastUpdate = currentTime;
-                                const inputField = $('#quantity');
-                                if (inputField.length) {
-                                    inputField.val(floatValue);
-                                } else {
-                                    console.error('Input field with data-fieldname="quantity" not found.');
-                                }
+                    // Process the received data
+                    let floatValue = reverseString(value);
+                    // let floatValue = parseInt(reversedValue);
+
+                    // Check if floatValue is a valid number
+                    if (!isNaN(floatValue)) {
+                        const currentTime = Date.now();
+
+                        // Throttle the updates
+                        if (currentTime - lastUpdate >= throttleDelay) {
+                            lastUpdate = currentTime;
+                            const inputField = $('#quantity');
+
+                            if (inputField.length) {
+                                inputField.val(floatValue);
+                                // Optionally, you can add a delay for focusing the input field if needed
+                                // setTimeout(() => {
+                                //     // inputField.focus();
+                                //     // inputField.select();
+                                // }, 500);
+                            } else {
+                                console.error('Input field with data-fieldname="quantity" not found.');
                             }
-                        } else {
-                            console.error('Received data is not a valid number:', floatValue);
                         }
-                    } catch (parseError) {
-                        console.warn('Skipping unparsable serial chunk:', value, parseError.message);
+                    } else {
+                        console.error('Received data is not a valid number:', floatValue);
                     }
                 } catch (error) {
-                    // Genuine read/hardware error - reset connection state so the next click can reconnect.
                     console.error('Error reading serial data:', error);
-                    try {
-                        reader.releaseLock();
-                    } catch (releaseError) {
-                        // reader may already be closed
-                    }
-                    port = null;
-                    reader = null;
                     break;
                 }
             }
         }
 
+        // Bind click event to the button to start the serial connection
         $(document).on('click', '#quantity', function () {
             connectSerial();
         });
     } else {
         console.error('Web Serial API is not supported in this browser.');
     }
-
-    // Bank machine writer
+    // WRITER CODE
     if ('serial' in navigator) {
         let w_port;
         let writer;
         let textEncoder;
         let w_reader;
         let w_textDecoder;
-        let w_lastUpdate = 0;
-        const w_throttleDelay = 3000;
+        let w_lastUpdate = 0; // Timestamp of the last update
+        const w_throttleDelay = 3000; // Throttle delay in milliseconds
 
+        // Function to connect to the serial port
         async function connectSerial() {
             try {
                 if (!w_port) {
                     w_port = await navigator.serial.requestPort();
                     await w_port.open({baudRate: 9600});
 
+                    // Initialize text encoder and decoder
                     textEncoder = new TextEncoderStream();
                     w_textDecoder = new TextDecoderStream();
 
@@ -132,10 +119,12 @@ $(document).ready(function () {
             }
         }
 
+        // Function to write data to the serial port
         async function writeToSerial(data) {
             try {
+                // Ensure the port is connected before writing
                 if (!w_port || !writer) {
-                    await connectSerial();
+                    await connectSerial(); // Try connecting first
                 }
                 const prefixedData = `0200${data}`;
                 await writer.write(prefixedData);
@@ -146,6 +135,7 @@ $(document).ready(function () {
         }
 
         function showAlert(value) {
+            // Create a custom alert div
             const alertBox = $('<div>')
                 .text(`Machine returned data: ${value}`)
                 .css({
@@ -161,8 +151,10 @@ $(document).ready(function () {
                     'z-index': 9999
                 });
 
+            // Append the alert to the body
             $('body').append(alertBox);
 
+            // Hide the alert after 3 seconds (3000 milliseconds)
             setTimeout(function () {
                 alertBox.fadeOut(500, function () {
                     $(this).remove();
@@ -170,6 +162,7 @@ $(document).ready(function () {
             }, 3000);
         }
 
+        // Function to read data from the serial port with throttling
         async function readSerialData() {
             while (true) {
                 try {
@@ -180,6 +173,8 @@ $(document).ready(function () {
                     }
 
                     const currentTime = Date.now();
+
+                    // Throttle the updates
                     if (currentTime - w_lastUpdate >= w_throttleDelay) {
                         w_lastUpdate = currentTime;
 
@@ -187,6 +182,19 @@ $(document).ready(function () {
                             if (value == 'Cancelled') {
                                 alert("Transaction Cancelled !");
                             } else {
+                                // const obj = value.split(' ') // split by space
+                                //     .filter(Boolean)       // remove any empty elements (if there are multiple spaces)
+                                //     .reduce((acc, pair) => {
+                                //         const [key, value] = pair.split('='); // split by '=' to separate key and value
+                                //         acc[key] = value; // assign key-value pair to the object
+                                //         return acc;
+                                //     }, {});
+                                // $('input[data-fieldname="machine_date"]').val(obj.Date).trigger('change');
+                                // $('input[data-fieldname="machine_time"]').val(obj.Time).trigger('change');
+                                // $('input[data-fieldname="machine_tid"]').val(obj.TID).trigger('change');
+                                // $('input[data-fieldname="machine_mid"]').val(obj.MID).trigger('change');
+                                // $('input[data-fieldname="machine_card_no"]').val(obj.CardNo).trigger('change');
+                                // $('input[data-fieldname="machine_invoice_no"]').val(value).trigger('change');
                                 $('textarea[data-fieldname="machine_returned_data"]').val(value).trigger('change');
                                 showAlert(value);
                             }
@@ -194,6 +202,7 @@ $(document).ready(function () {
                             console.error('No data returned by bank machine');
                         }
                     }
+
                 } catch (error) {
                     console.error('Error reading serial data:', error);
                     break;
@@ -201,8 +210,10 @@ $(document).ready(function () {
             }
         }
 
+        // Function to handle sending data from grand_total and mode_of_payment
         function sendDataBasedOnPayment() {
             const grandTotal = $('.frappe-control[data-fieldname="grand_total"] .control-value').text();
+
             if (grandTotal) {
                 writeToSerial(grandTotal);
                 readSerialData();
@@ -211,12 +222,18 @@ $(document).ready(function () {
             }
         }
 
+        // Bind click event to the mode_of_payment inputs
         $(document).on('change', 'input[name="bank_alfalah"]', function () {
             connectSerial().then(() => {
                 sendDataBasedOnPayment();
             });
+
         });
+
     } else {
         console.error('Web Serial API is not supported in this browser.');
     }
+
+
 });
+
